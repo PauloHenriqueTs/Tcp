@@ -14,10 +14,13 @@ namespace TCP.Utils
 
         public Client()
         {
-            client = new TcpClient();
-            var s = Dns.GetHostEntry(Dns.GetHostName());
-            client.Connect(s.AddressList[1], 23);
-            stream = client.GetStream();
+            
+                client = new TcpClient();
+                client.Connect(GetLocalIPAddress(), 23);
+                stream = client.GetStream();
+            
+           
+           
         }
 
         public void send(MeterCommand command)
@@ -32,10 +35,27 @@ namespace TCP.Utils
 
         public MeterCommand Read()
         {
-            byte[] myReadBuffer = new byte[1024];
-            var numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
-            var receive = Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead);
-            return JsonSerializer.Deserialize<MeterCommand>(receive);
+        
+                byte[] myReadBuffer = new byte[1024];
+                var numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                var receive = Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead);
+                return JsonSerializer.Deserialize<MeterCommand>(receive);
+            
+            
+            
+        }
+
+        public static IPAddress GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip;
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
     }
 }

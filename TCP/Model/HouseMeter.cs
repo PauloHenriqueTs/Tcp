@@ -42,7 +42,7 @@ namespace TCP.Model
             set
             {
                 _serialId = value;
-                OnPropertyChanged(nameof(serialId));
+                2OnPropertyChanged(nameof(serialId));
             }
         }
 

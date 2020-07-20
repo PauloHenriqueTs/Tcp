@@ -1,16 +1,40 @@
-﻿<Window x:Class="TCP.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+﻿<Window
+    x:Class="TCP.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
 
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="340,101,0,0" Text="{Binding houseMeter.count}" TextWrapping="Wrap" VerticalAlignment="Top" Height="145" Width="193" FontSize="25" />
-        <Button Command="{Binding StopCommand}"  Content="Stop" HorizontalAlignment="Left" Margin="51,62,0,0" VerticalAlignment="Top" Height="68" Width="137" />
-        <TextBox HorizontalAlignment="Left" Margin="51,165,0,0" Text="{Binding houseMeter.serialId,Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="137" RenderTransformOrigin="0.5,0.5" Height="24">
-        </TextBox>
+        <TextBlock
+            Width="193"
+            Height="145"
+            Margin="340,101,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            FontSize="25"
+            Text="{Binding houseMeter.count}"
+            TextWrapping="Wrap" />
+        <Button
+            Width="137"
+            Height="68"
+            Margin="51,62,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Command="{Binding StopCommand}"
+            Content="Stop" />
+        <TextBox
+            Width="137"
+            Height="24"
+            Margin="51,165,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            RenderTransformOrigin="0.5,0.5"
+            Text="{Binding Path=houseMeter.serialId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            TextWrapping="Wrap" />
     </Grid>
 </Window>
