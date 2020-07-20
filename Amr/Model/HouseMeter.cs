@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TCP.Model
+namespace Amr.Model
 {
     public class HouseMeter : INotifyPropertyChanged
     {
@@ -19,22 +19,6 @@ namespace TCP.Model
         private string _count;
 
         public bool Switch { get; set; } = true;
-
-        public HouseMeter()
-        {
-            Task.Run(async () =>
-            {
-                int i = 0;
-                while (true)
-                {
-                    await Task.Delay(200);
-                    if (Switch)
-                    {
-                        count = (i++).ToString();
-                    }
-                }
-            });
-        }
 
         public string serialId
         {

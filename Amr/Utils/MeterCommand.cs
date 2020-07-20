@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Amr.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using TCP.Model;
 
-namespace TCP
+namespace Amr.Utils
 {
     public class MeterCommand
     {
