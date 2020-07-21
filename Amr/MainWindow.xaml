@@ -20,5 +20,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Button Content="fdgdfg" Margin="519,303,174,68" Command="{Binding AddCommand}" />
     </Grid>
 </Window>

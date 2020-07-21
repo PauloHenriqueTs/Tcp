@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Amr.Utils
 {
@@ -11,6 +12,7 @@ namespace Amr.Utils
     {
         private TcpListener server;
         private NetworkStream stream;
+        private TcpClient client;
 
         public Server()
         {
@@ -21,9 +23,10 @@ namespace Amr.Utils
 
         public MeterCommand ReadTCP()
         {
-            TcpClient client = server.AcceptTcpClient();
-            stream = client.GetStream();
+            if (stream == null)
+                client = server.AcceptTcpClient();
 
+            stream = client.GetStream();
             byte[] myReadBuffer = new byte[1024];
             var numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
             var receive = Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead);
@@ -32,7 +35,9 @@ namespace Amr.Utils
 
         public void WriteTCP(MeterCommand command)
         {
-            TcpClient client = server.AcceptTcpClient();
+            if (stream == null)
+                client = server.AcceptTcpClient();
+
             stream = client.GetStream();
             if (stream.CanWrite)
             {
