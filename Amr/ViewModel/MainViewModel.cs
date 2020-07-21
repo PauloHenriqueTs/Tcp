@@ -3,6 +3,7 @@ using Amr.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace Amr.ViewModel
         private Server server;
         public ObservableCollection<HouseMeter> meters { get; set; }
 
+        public HouseMeter Selected { get; set; }
         public ICommand AddCommand { get; set; }
 
         public MainViewModel()
@@ -31,19 +33,26 @@ namespace Amr.ViewModel
 
         private void Add(object o)
         {
-            var meter = new HouseMeter { serialId = "344", count = "1115555", Switch = true };
-            meters.Insert(0, meter);
+            server.WriteTCP(new MeterCommand { value = Selected, type = MeterCommandType.Switch });
         }
 
         private void GetMessages()
         {
-            while (true)
+            server.server.DataReceived += (sender, message) =>
             {
-                var data = server.ReadTCP();
-                var meter = new HouseMeter { serialId = data.value.serialId, count = data.value.count, Switch = data.value.Switch };
-                // server.WriteTCP(data);
-                meters.Insert(0, meter);
-            }
+                var data = server.ReadTCP(message);
+
+                if (!meters.Any(m => m.serialId == data.value.serialId))
+                {
+                    meters.Add(data.value);
+                }
+                else
+                {
+                    var meter = meters.FirstOrDefault(m => m.serialId == data.value.serialId);
+                    meters[meters.IndexOf(meter)].count = data.value.count;
+                    //meters.Remove(meter);
+                }
+            };
         }
     }
 }

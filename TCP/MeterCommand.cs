@@ -7,7 +7,6 @@ namespace TCP
 {
     public class MeterCommand
     {
-        public string serialId { get; set; }
         public HouseMeter value { get; set; }
         public MeterCommandType type { get; set; }
     }

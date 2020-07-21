@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -40,12 +41,21 @@ namespace TCP.ViewModel
 
         private void GetCommand()
         {
-            while (true)
+            client.listener.DataReceived += (sender, message) =>
             {
-                var command = client.Read();
-                if (command.type == MeterCommandType.Switch && command.serialId == houseMeter.serialId)
-                    Stop(this);
-            }
+                try
+                {
+                    var data = client.Read(message);
+
+                    if (houseMeter != null && data != null && data.value != null)
+                    {
+                        // Debug.WriteLine(data.value.ToString());
+                        if (data.type == MeterCommandType.Switch && this.houseMeter.serialId == data.value.serialId)
+                            Stop(this);
+                    }
+                }
+                catch (NullReferenceException e) { Debug.Write(e.ToString()); }
+            };
         }
 
         private async void SendCountCommand()
@@ -55,7 +65,7 @@ namespace TCP.ViewModel
                 if (!String.IsNullOrEmpty(houseMeter.serialId))
                 {
                     await Task.Delay(500);
-                    client.send(new MeterCommand { type = MeterCommandType.Count, serialId = houseMeter.serialId, value = houseMeter });
+                    client.send(new MeterCommand { type = MeterCommandType.Count, value = houseMeter });
                 }
             }
         }

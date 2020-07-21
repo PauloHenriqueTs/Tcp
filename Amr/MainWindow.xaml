@@ -10,16 +10,27 @@
     Height="450"
     mc:Ignorable="d">
     <Grid>
-        <ListView ItemsSource="{Binding meters}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock FontSize="12" Text="{Binding serialId}" />
-                        <TextBlock FontSize="12" Text="{Binding count}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+        <ListView ItemsSource="{Binding meters}" SelectedItem="{Binding Selected}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn
+                        Width="100"
+                        DisplayMemberBinding="{Binding serialId}"
+                        Header="Name" />
+                    <GridViewColumn
+                        Width="50"
+                        DisplayMemberBinding="{Binding count}"
+                        Header="Age" />
+                    <GridViewColumn
+                        Width="100"
+                        DisplayMemberBinding="{Binding Switch}"
+                        Header="Age" />
+                </GridView>
+            </ListView.View>
         </ListView>
-        <Button Content="fdgdfg" Margin="519,303,174,68" Command="{Binding AddCommand}" />
+        <Button
+            Margin="519,303,174,68"
+            Command="{Binding AddCommand}"
+            Content="fdgdfg" />
     </Grid>
 </Window>
