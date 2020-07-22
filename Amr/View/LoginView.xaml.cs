@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Amr.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -10,24 +11,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Amr.View;
 
-namespace Amr
+namespace Amr.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LoginView : Page
     {
-        public MainWindow()
+        public LoginView()
         {
             InitializeComponent();
-            Main.Navigate(new LoginView());
-        }
 
-        public void FrameContent(object o)
-        {
-            Main.Content = o;
+            this.DataContext = new LoginViewModel();
         }
     }
 }
