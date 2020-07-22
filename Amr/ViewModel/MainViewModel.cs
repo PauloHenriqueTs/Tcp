@@ -18,6 +18,8 @@ namespace Amr.ViewModel
         private Server server;
         public ObservableCollection<HouseMeter> meters { get; set; }
 
+        public HouseMeter Selected { get; set; }
+
         public ICommand AddCommand { get; set; }
 
         public MainViewModel()
@@ -31,8 +33,9 @@ namespace Amr.ViewModel
 
         private void Add(object o)
         {
-            var meter = new HouseMeter { serialId = "344", count = "1115555", Switch = true };
-            meters.Insert(0, meter);
+            var s = Selected;
+
+            server.WriteTCP(new MeterCommand { value = s, type = MeterCommandType.Switch });
         }
 
         private void GetMessages()
@@ -40,9 +43,20 @@ namespace Amr.ViewModel
             while (true)
             {
                 var data = server.ReadTCP();
-                var meter = new HouseMeter { serialId = data.value.serialId, count = data.value.count, Switch = data.value.Switch };
+                if(data != null) {
+                    if (!meters.Any(m => m.serialId == data.value.serialId))
+                    {
+                        meters.Insert(0, data.value);
+                    }
+                    else
+                    {
+                        var m = meters.FirstOrDefault(m => m.serialId == data.value.serialId).count = data.value.count;
+                    }
+                }
+               
+
+                // var meter = new HouseMeter { serialId = data.value.serialId, count = data.value.count, Switch = data.value.Switch };
                 // server.WriteTCP(data);
-                meters.Insert(0, meter);
             }
         }
     }

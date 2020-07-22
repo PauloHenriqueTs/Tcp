@@ -23,22 +23,34 @@ namespace Amr.Utils
 
         public MeterCommand ReadTCP()
         {
-            if (stream == null)
-                client = server.AcceptTcpClient();
+            try
+            {
+                if (stream == null)
+                {
+                    client = server.AcceptTcpClient();
+                    stream = client.GetStream();
+                }
 
-            stream = client.GetStream();
-            byte[] myReadBuffer = new byte[1024];
-            var numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
-            var receive = Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead);
-            return JsonSerializer.Deserialize<MeterCommand>(receive);
+                byte[] myReadBuffer = new byte[1024];
+                var numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                var receive = Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead);
+                server.Stop();
+                return JsonSerializer.Deserialize<MeterCommand>(receive);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public void WriteTCP(MeterCommand command)
         {
             if (stream == null)
+            {
                 client = server.AcceptTcpClient();
 
-            stream = client.GetStream();
+                stream = client.GetStream();
+            }
             if (stream.CanWrite)
             {
                 var sender = JsonSerializer.Serialize(command);

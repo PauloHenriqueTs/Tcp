@@ -43,7 +43,7 @@ namespace TCP.ViewModel
             while (true)
             {
                 var command = client.Read();
-                if (command.type == MeterCommandType.Switch && command.serialId == houseMeter.serialId)
+                if (command.type == MeterCommandType.Switch && command.value.serialId == houseMeter.serialId)
                     Stop(this);
             }
         }
@@ -55,7 +55,7 @@ namespace TCP.ViewModel
                 if (!String.IsNullOrEmpty(houseMeter.serialId))
                 {
                     await Task.Delay(500);
-                    client.send(new MeterCommand { type = MeterCommandType.Count, serialId = houseMeter.serialId, value = houseMeter });
+                    client.send(new MeterCommand { type = MeterCommandType.Count, value = houseMeter });
                 }
             }
         }
