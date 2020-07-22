@@ -7,4 +7,8 @@
     <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SuperSimpleTcp" Version="2.0.5" />
+  </ItemGroup>
+
 </Project>

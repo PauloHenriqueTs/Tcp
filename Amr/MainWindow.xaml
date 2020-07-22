@@ -10,15 +10,27 @@
     Height="450"
     mc:Ignorable="d">
     <Grid>
-        <ListView ItemsSource="{Binding meters}" Margin="0,0,546,0" SelectedItem="{Binding Selected,Mode=TwoWay}">
+        <ListView ItemsSource="{Binding meters}" SelectedItem="{Binding Selected}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="SerialId" Width="100" DisplayMemberBinding="{Binding serialId}" />
-                    <GridViewColumn Header="Count" Width="50" DisplayMemberBinding="{Binding count}" />
-                    <GridViewColumn Header="Switch State" Width="100" DisplayMemberBinding="{Binding Switch}" />
+                    <GridViewColumn
+                        Width="100"
+                        DisplayMemberBinding="{Binding serialId}"
+                        Header="Name" />
+                    <GridViewColumn
+                        Width="50"
+                        DisplayMemberBinding="{Binding count}"
+                        Header="Age" />
+                    <GridViewColumn
+                        Width="100"
+                        DisplayMemberBinding="{Binding Switch}"
+                        Header="Age" />
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="fdgdfg" Margin="519,303,174,68" Command="{Binding AddCommand}" />
+        <Button
+            Margin="519,303,174,68"
+            Command="{Binding AddCommand}"
+            Content="fdgdfg" />
     </Grid>
 </Window>

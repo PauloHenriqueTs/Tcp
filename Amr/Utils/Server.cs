@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleTcp;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -10,52 +11,27 @@ namespace Amr.Utils
 {
     public class Server
     {
-        private TcpListener server;
-        private NetworkStream stream;
-        private TcpClient client;
+        public TcpServer server;
 
         public Server()
         {
-            server = new TcpListener(GetLocalIPAddress(), 23);
-
+            server = new TcpServer(GetLocalIPAddress().ToString(), 23, false, null, null);
             server.Start();
         }
 
-        public MeterCommand ReadTCP()
+        public MeterCommand ReadTCP(DataReceivedFromClientEventArgs message)
         {
-            try
-            {
-                if (stream == null)
-                {
-                    client = server.AcceptTcpClient();
-                    stream = client.GetStream();
-                }
-
-                byte[] myReadBuffer = new byte[1024];
-                var numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
-                var receive = Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead);
-                server.Stop();
-                return JsonSerializer.Deserialize<MeterCommand>(receive);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var received = Encoding.UTF8.GetString(message.Data, 0, message.Data.Length);
+            return JsonSerializer.Deserialize<MeterCommand>(received);
         }
 
         public void WriteTCP(MeterCommand command)
         {
-            if (stream == null)
-            {
-                client = server.AcceptTcpClient();
+            var sender = JsonSerializer.Serialize(command);
 
-                stream = client.GetStream();
-            }
-            if (stream.CanWrite)
+            foreach (var item in server.GetClients())
             {
-                var sender = JsonSerializer.Serialize(command);
-                byte[] message = Encoding.ASCII.GetBytes(sender);
-                stream.Write(message, 0, message.Length);
+                server.Send(item, Encoding.UTF8.GetBytes(sender));
             }
         }
 
