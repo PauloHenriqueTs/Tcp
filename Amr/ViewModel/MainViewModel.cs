@@ -1,5 +1,6 @@
 ﻿using Amr.Model;
 using Amr.Utils;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +20,7 @@ namespace Amr.ViewModel
         private Server server;
         public ObservableCollection<HouseMeter> meters { get; set; }
 
+        private HubConnection connection;
         public HouseMeter Selected { get; set; }
         public ICommand AddCommand { get; set; }
 
@@ -28,16 +30,21 @@ namespace Amr.ViewModel
             server = new Server();
             meters = new ObservableCollection<HouseMeter> { new HouseMeter { serialId = "1", Switch = false, count = "35" } };
             BindingOperations.EnableCollectionSynchronization(meters, new object());
+            connection = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5001/ChatHub")
+                .Build();
             Task.Run(GetMessages);
         }
 
         private void Add(object o)
         {
+            connection.SendAsync("ReceiveMessage", "Hello Workd");
             server.WriteTCP(new MeterCommand { value = Selected, type = MeterCommandType.Switch });
         }
 
-        private void GetMessages()
+        private async Task GetMessages()
         {
+            await connection.StartAsync();
             server.server.DataReceived += (sender, message) =>
             {
                 var data = server.ReadTCP(message);
